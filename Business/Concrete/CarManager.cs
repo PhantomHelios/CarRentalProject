@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,33 @@ namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
-        IEntityRepository<Car> _carDal;
-        public CarManager(IEntityRepository<Car> carDal)
+        ICarDal _carDal;
+        public CarManager(ICarDal carDal)
         {
             _carDal = carDal;
         }
 
-        public void AddCar(Car car)
+        public void Delete(Car car)
+        {
+            _carDal.Delete(car);
+        }
+
+        public List<Car> Get(int id)
+        {
+            return _carDal.GetAll(c => c.CarId == id);
+        }
+
+        public List<Car> GetAll()
+        {
+            return _carDal.GetAll();
+        }
+
+        public List<CarDetailDto> GetCarDetails()
+        {
+            return _carDal.GetCarDetails();
+        }
+
+        public void Insert(Car car)
         {
             if (car == null)
                 return;
@@ -36,14 +57,9 @@ namespace Business.Concrete
             _carDal.Add(car);
         }
 
-        public List<Car> Get(int id)
+        public void Update(Car car)
         {
-            return _carDal.GetAll(c => c.CarId == id);
-        }
-
-        public List<Car> GetAll()
-        {
-            return _carDal.GetAll();
+            _carDal.Update(car);
         }
     }
 }
