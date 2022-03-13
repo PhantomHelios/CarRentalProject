@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
@@ -18,48 +20,55 @@ namespace Business.Concrete
             _carDal = carDal;
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
-            _carDal.Delete(car);
+            try { 
+                _carDal.Delete(car); 
+            }
+            catch { 
+                return new ErrorResult(Messages.MaintenanceTime); 
+            }
+
+            return new SuccessResult(Messages.CarDeleted); 
         }
 
-        public List<Car> Get(int id)
+        public IDataResult<List<Car>> Get(int id)
         {
-            return _carDal.GetAll(c => c.CarId == id);
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll(c => c.CarId == id));
         }
 
-        public List<Car> GetAll()
+        public IDataResult<List<Car>> GetAll()
         {
-            return _carDal.GetAll();
+            return new SuccessDataResult<List<Car>>(_carDal.GetAll());
         }
 
-        public List<CarDetailDto> GetCarDetails()
+        public IDataResult<List<CarDetailDto>> GetCarDetails()
         {
-            return _carDal.GetCarDetails();
+            return new SuccessDataResult<List<CarDetailDto>>(_carDal.GetCarDetails());
         }
 
-        public void Insert(Car car)
+        public IResult Insert(Car car)
         {
-            if (car == null)
-                return;
-
             if (car.Description.Length < 2)
-            {
-                Console.WriteLine("Car name must be at least lentgh of 2!");
-                return;
-            }
+                return new ErrorResult(Messages.InvalidDescription);
             if (car.DailyPrice <= 0)
-            {
-                Console.WriteLine("Daily price must be a positive value!");
-                return;
-            }
+                return new ErrorResult(Messages.InvalidDailyPrice);
 
             _carDal.Add(car);
+
+            return new SuccessResult(Messages.CarAdded);
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
-            _carDal.Update(car);
+            try { 
+                _carDal.Update(car); 
+            }
+            catch { 
+                return new ErrorResult(Messages.MaintenanceTime); 
+            }
+            
+            return new SuccessResult(Messages.CarUpdated);
         }
     }
 }
