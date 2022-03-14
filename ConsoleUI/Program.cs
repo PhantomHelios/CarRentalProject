@@ -10,8 +10,44 @@ namespace ConsoleUI
         public static void Main(String[] args)
         {
             //ColorTest();
-            CarTest();
+            //CarTest();
             //BrandTest();
+
+            //UserTest();
+            //CustomerTest();
+            RentalTest();
+        }
+
+        public static void RentalTest()
+        {
+            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+
+            var test = rentalManager.GetRentalDetails();
+
+            foreach (var rental in test.Data)
+                Console.WriteLine(rental.CustomerFirstName + " " + rental.CarModel);
+        }
+
+        public static void CustomerTest()
+        {
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+
+            var result = customerManager.GetCustomerDetails();
+
+            if(result.Success)
+                foreach(var customer in result.Data)
+                    Console.WriteLine(customer.CustomerFirstName + " " + customer.CustomerLastName + " => " + customer.CompanyName);
+        }
+
+        public static void UserTest()
+        {
+            UserManager userManager = new UserManager(new EfUserDal());
+
+            var result = userManager.GetAll();
+
+            if (result.Success)
+                foreach (var user in result.Data)
+                    Console.WriteLine(user.FirstName + " " + user.LastName);
         }
 
         public static void CarTest()
