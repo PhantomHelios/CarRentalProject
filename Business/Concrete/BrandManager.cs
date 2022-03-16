@@ -44,7 +44,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Brand>>(_brandDal.GetAll());
         }
 
-        public IResult Insert(Brand brand)
+        public IResult Add(Brand brand)
         {
             try
             {

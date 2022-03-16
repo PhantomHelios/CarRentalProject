@@ -42,7 +42,7 @@ namespace Business.Concrete
             return new SuccessDataResult<List<Color>>(_colorDal.GetAll());
         }
 
-        public IResult Insert(Color color)
+        public IResult Add(Color color)
         {
             try
             {
