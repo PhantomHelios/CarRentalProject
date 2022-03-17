@@ -2,6 +2,8 @@
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -17,42 +19,35 @@ namespace Business.Concrete
     public class RentalManager : IRentalService
     {
         IRentalDal _rentalDal;
+        ICustomerService _customerService;
+        ICarService _carService;
 
-        public RentalManager(IRentalDal rentalDal)
+        public RentalManager(IRentalDal rentalDal, ICustomerService customerService, ICarService carService)
         {
             _rentalDal = rentalDal;
+            _customerService = customerService;
+            _carService = carService;
         }
 
         [ValidationAspect(typeof(RentalValidator))]
         public IResult Add(Rental rental)
         {
-            try
-            {
-                var controller = _rentalDal.GetAll(r => r.CarId == rental.CarId && r.ReturnDate == null);
-                if (controller.Count > 0)
-                    return new ErrorResult(Messages.CarAlreadyRented);
+            var result = BusinessRules.Run(CheckIfCarExists(rental.CarId),
+                CheckIfCustomerExists(rental.CustomerId), CheckIfCarIsRented(rental));
+            if (result != null)
+                return result;
 
-                _rentalDal.Add(rental);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            _rentalDal.Add(rental);
+            
 
             return new SuccessResult(Messages.RentalAdded);
         }
 
         public IResult Delete(Rental rental)
         {
-            try
-            {
-                _rentalDal.Delete(rental);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
-
+            
+            _rentalDal.Delete(rental);
+            
             return new SuccessResult(Messages.RentalDeleted);
         }
 
@@ -78,16 +73,32 @@ namespace Business.Concrete
 
         public IResult Update(Rental rental)
         {
-            try
-            {
-                _rentalDal.Update(rental);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            var result = BusinessRules.Run(CheckIfCarExists(rental.CarId),
+                CheckIfCustomerExists(rental.CustomerId), CheckIfCarIsRented(rental));
+            if (result != null)
+                return result;
 
+            _rentalDal.Update(rental);
+            
             return new SuccessResult(Messages.RentalUpdated);
+        }
+
+        public IResult CheckIfCarIsRented(Rental rental)
+        {
+            var controller = _rentalDal.GetAll(r => r.CarId == rental.CarId && r.ReturnDate == null);
+            
+            return controller.Count > 0 ? new ErrorResult(Messages.CarAlreadyRented)
+                : new SuccessResult();
+        }
+
+        public IResult CheckIfCustomerExists(int customerId)
+        {
+            return _customerService.Get(customerId).Success ? new SuccessResult() : new ErrorResult();
+        }
+
+        public IResult CheckIfCarExists(int carId)
+        {
+            return _carService.Get(carId).Success ? new SuccessResult() : new ErrorResult();
         }
     }
 }

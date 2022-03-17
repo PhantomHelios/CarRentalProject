@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Entities.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,10 +32,24 @@ namespace Business.Constants
         public static string CustomerAdded = "Customer registered successfully.";
         public static string CustomerDeleted = "Customer deleted from the system successfully.";
         public static string CustomerUpdated = "Customer updated successfully.";
+        public static string CustomershipAlreadyExist = "This customership is alreay exists!";
 
         public static string RentalAdded = "Car rented successfully.";
         public static string RentalDeleted = "Rental deleted from the system successfully.";
         public static string RentalUpdated = "Rental updated successfully.";
         public static string CarAlreadyRented = "Car is already rented!";
+
+        public static string CarImageAdded = "Car image added to the system successfully.";
+        public static string CarImageDeleted = "Car image deleted from the system successfully.";
+        public static string CarImageUpdated = "Car image updated successfully.";
+
+        public static string AuthorizationDenied = "Authorization Denied!";
+        public static string UserRegistered = "User registered successfully.";
+
+        public static string UserNotFound = "User not found!";
+        public static string PasswordError = "Password is wrong!";
+        public static string SuccessfulLogin = "Logged in successfully.";
+        public static string UserAlreadyExists = "User exist with this email!";
+        public static string AccessTokenCreated = "Access token created.";
     }
 }

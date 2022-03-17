@@ -20,7 +20,9 @@ namespace ConsoleUI
 
         public static void RentalTest()
         {
-            RentalManager rentalManager = new RentalManager(new EfRentalDal());
+            RentalManager rentalManager = new RentalManager(new EfRentalDal(), 
+                new CustomerManager(new EfCustomerDal(), new UserManager(new EfUserDal())), 
+                new CarManager(new EfCarDal(), new ColorManager(new EfColorDal()), new BrandManager(new EfBrandDal())));
 
             var test = rentalManager.GetRentalDetails();
 
@@ -30,7 +32,7 @@ namespace ConsoleUI
 
         public static void CustomerTest()
         {
-            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal(), new UserManager(new EfUserDal()));
 
             var result = customerManager.GetCustomerDetails();
 
@@ -52,7 +54,7 @@ namespace ConsoleUI
 
         public static void CarTest()
         {
-            CarManager carManager = new CarManager(new EfCarDal());
+            CarManager carManager = new CarManager(new EfCarDal(), new ColorManager(new EfColorDal()), new BrandManager(new EfBrandDal()));
 
             var result = carManager.GetCarDetails();
 

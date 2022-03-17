@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -34,9 +35,9 @@ namespace Business.Concrete
             return new SuccessResult(Messages.BrandDeleted);
         }
 
-        public IDataResult<List<Brand>> Get(int id)
+        public IDataResult<Brand> Get(int id)
         {
-            return new SuccessDataResult<List<Brand>>(_brandDal.GetAll(b => b.Id == id));
+            return new SuccessDataResult<Brand>(_brandDal.Get(b => b.Id == id));
         }
 
         public IDataResult<List<Brand>> GetAll()
@@ -46,30 +47,25 @@ namespace Business.Concrete
 
         public IResult Add(Brand brand)
         {
-            try
-            {
-                _brandDal.Add(brand);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            var result = BusinessRules.Run(CheckIfBrandExists(brand.Name));
+            if (result != null)
+                return result;
+
+            _brandDal.Add(brand);
 
             return new SuccessResult(Messages.BrandAdded);
         }
 
         public IResult Update(Brand brand)
         {
-            try
-            {
-                _brandDal.Update(brand);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            _brandDal.Update(brand);
 
             return new SuccessResult(Messages.BrandUpdated);
+        }
+
+        public IResult CheckIfBrandExists(string name)
+        {
+            return _brandDal.GetAll(b => b.Name == name).Any() ? new ErrorResult() : new SuccessResult();
         }
     }
 }

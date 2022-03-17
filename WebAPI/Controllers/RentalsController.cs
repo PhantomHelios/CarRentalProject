@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Entities.Concrete;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
+        [SecuredOperation("Admin")]
         public IActionResult GetAll()
         {
             var result = _rentalService.GetAll();

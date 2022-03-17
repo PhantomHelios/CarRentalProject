@@ -7,9 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Utilities\Securtiy\**" />
+    <EmbeddedResource Remove="Utilities\Securtiy\**" />
+    <None Remove="Utilities\Securtiy\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac.Extras.DynamicProxy" Version="6.0.1" />
     <PackageReference Include="FluentValidation" Version="10.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.15" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0-preview.1.22076.6" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0-preview.2.22152.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.0-preview.2.22152.2" />
   </ItemGroup>
 
 </Project>
