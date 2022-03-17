@@ -2,24 +2,24 @@
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
     public class CarManager : ICarService
     {
         ICarDal _carDal;
-        public CarManager(ICarDal carDal)
+        IColorService _colorService;
+        IBrandService _brandService;
+        public CarManager(ICarDal carDal, IColorService colorService, IBrandService brandService)
         {
             _carDal = carDal;
+            _colorService = colorService;
+            _brandService = brandService;
         }
 
         public IResult Delete(Car car)
@@ -52,6 +52,10 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
+            var result = BusinessRules.Run(CheckIfBrandExists(car.BrandId), CheckIfColorExists(car.ColorId));
+            if (result != null)
+                return result;
+
             _carDal.Add(car);
 
             return new SuccessResult(Messages.CarAdded);
@@ -60,14 +64,23 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CarValidator))]
         public IResult Update(Car car)
         {
-            try { 
-                _carDal.Update(car); 
-            }
-            catch { 
-                return new ErrorResult(Messages.MaintenanceTime); 
-            }
+            var result = BusinessRules.Run(CheckIfBrandExists(car.BrandId), CheckIfColorExists(car.ColorId));
+            if (result != null)
+                return result;
+
+            _carDal.Update(car);
             
             return new SuccessResult(Messages.CarUpdated);
+        }
+
+        public IResult CheckIfBrandExists(int brandId)
+        {
+            return _brandService.Get(brandId).Success ? new SuccessResult() : new ErrorResult();
+        }
+
+        public IResult CheckIfColorExists(int colorId)
+        {
+            return _colorService.Get(colorId).Success ? new SuccessResult() : new ErrorResult();
         }
     }
 }

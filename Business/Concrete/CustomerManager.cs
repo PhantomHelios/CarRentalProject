@@ -2,52 +2,40 @@
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
     public class CustomerManager : ICustomerService
     {
         ICustomerDal _customerDal;
-        public CustomerManager(ICustomerDal customerDal)
+        IUserService _userService;
+        public CustomerManager(ICustomerDal customerDal, IUserService userService)
         {
             _customerDal = customerDal;
+            _userService = userService;
         }
 
         [ValidationAspect(typeof(CustomerValidator))]
         public IResult Add(Customer customer)
         {
-            try
-            {
-                _customerDal.Add(customer);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            var result = BusinessRules.Run(CheckIfUserExists(customer.UserId), CheckIfCustomershipExists(customer));
+            if (result != null)
+                return result;
+
+            _customerDal.Add(customer);
 
             return new SuccessResult(Messages.CustomerAdded);
         }
 
         public IResult Delete(Customer customer)
         {
-            try
-            {
-                _customerDal.Delete(customer);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
-
+            _customerDal.Delete(customer);
+            
             return new SuccessResult(Messages.CustomerDeleted);
         }
 
@@ -72,16 +60,24 @@ namespace Business.Concrete
         [ValidationAspect(typeof(CustomerValidator))]
         public IResult Update(Customer customer)
         {
-            try
-            {
-                _customerDal.Update(customer);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            var result = BusinessRules.Run(CheckIfUserExists(customer.UserId));
+            if (result != null)
+                return result;
 
+            _customerDal.Update(customer);
+            
             return new SuccessResult(Messages.CustomerUpdated);
+        }
+
+        public IResult CheckIfUserExists(int userId)
+        {
+            return _userService.Get(userId).Success ? new ErrorResult() : new SuccessResult();
+        }
+
+        public IResult CheckIfCustomershipExists(Customer customer)
+        {
+            return _customerDal.Get(c => c.UserId == customer.UserId && c.CompanyName == customer.CompanyName) == null
+                ? new ErrorResult(Messages.CustomershipAlreadyExist) : new SuccessResult();
         }
     }
 }

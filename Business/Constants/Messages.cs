@@ -31,10 +31,15 @@ namespace Business.Constants
         public static string CustomerAdded = "Customer registered successfully.";
         public static string CustomerDeleted = "Customer deleted from the system successfully.";
         public static string CustomerUpdated = "Customer updated successfully.";
+        public static string CustomershipAlreadyExist = "This customership is alreay exists!";
 
         public static string RentalAdded = "Car rented successfully.";
         public static string RentalDeleted = "Rental deleted from the system successfully.";
         public static string RentalUpdated = "Rental updated successfully.";
         public static string CarAlreadyRented = "Car is already rented!";
+
+        public static string CarImageAdded = "Car image added to the system successfully.";
+        public static string CarImageDeleted = "Car image deleted from the system successfully.";
+        public static string CarImageUpdated = "Car image updated successfully.";
     }
 }

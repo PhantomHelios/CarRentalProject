@@ -1,5 +1,6 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -32,9 +33,9 @@ namespace Business.Concrete
             return new SuccessResult(Messages.ColorDeleted);
         }
 
-        public IDataResult<List<Color>> Get(int id)
+        public IDataResult<Color> Get(int id)
         {
-            return new SuccessDataResult<List<Color>>(_colorDal.GetAll(c => c.Id == id));
+            return new SuccessDataResult<Color>(_colorDal.Get(c => c.Id == id));
         }
 
         public IDataResult<List<Color>> GetAll()
@@ -44,14 +45,11 @@ namespace Business.Concrete
 
         public IResult Add(Color color)
         {
-            try
-            {
-                _colorDal.Add(color);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            var result = BusinessRules.Run(CheckIfColorExists(color.Name));
+            if (result != null)
+                return result;
+
+            _colorDal.Add(color);
 
             return new SuccessResult(Messages.ColorAdded);
         }
@@ -68,6 +66,11 @@ namespace Business.Concrete
             }
 
             return new SuccessResult(Messages.ColorUpdated);
+        }
+
+        public IResult CheckIfColorExists(string name)
+        {
+            return _colorDal.GetAll(c => c.Name == name).Any() ? new ErrorResult() : new SuccessResult();
         }
     }
 }

@@ -51,9 +51,11 @@ namespace Business.Concrete
             return new SuccessResult(Messages.UserDeleted);
         }
 
-        public IDataResult<List<User>> Get(int id)
+        public IDataResult<User> Get(int id)
         {
-            return new SuccessDataResult<List<User>>(_userDal.GetAll(u => u.Id == id));
+            var result = _userDal.Get(u => u.Id == id);
+            
+            return result != null ? new SuccessDataResult<User>(result) : new ErrorDataResult<User>();
         }
 
         public IDataResult<List<User>> GetAll()
