@@ -4,7 +4,7 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using Entities.Concrete;
+using Core.Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,17 +63,22 @@ namespace Business.Concrete
             return new SuccessDataResult<List<User>>(_userDal.GetAll());
         }
 
+        public IDataResult<User> GetByMail(string email)
+        {
+            var result = _userDal.Get(u => u.Email == email);
+
+            return result == null ? new ErrorDataResult<User>() : new SuccessDataResult<User>(result);
+        }
+
+        public IDataResult<List<OperationClaim>> GetClaims(User user)
+        {
+            return new SuccessDataResult<List<OperationClaim>>(_userDal.GetClaims(user));
+        }
+
         [ValidationAspect(typeof(UserValidator))]
         public IResult Update(User user)
         {
-            try
-            {
-                _userDal.Update(user);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            _userDal.Update(user);
 
             return new SuccessResult(Messages.UserUpdated);
         }
