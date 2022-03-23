@@ -2,6 +2,10 @@
 using Core.Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebAPI.Controllers
 {
@@ -22,7 +26,9 @@ namespace WebAPI.Controllers
             var userToLogin = _authService.Login(userForLoginDto);
 
             if (!userToLogin.Success)
+            {
                 return BadRequest(userToLogin.Message);
+            }
 
             var result = _authService.CreateAccessToken(userToLogin.Data);
 
@@ -39,6 +45,7 @@ namespace WebAPI.Controllers
 
             if(!userExists.Success)
                 return BadRequest(userExists.Message);
+            }
 
             var registerResult = _authService.Register(userForRegisterDto);
             var result = _authService.CreateAccessToken(registerResult.Data);

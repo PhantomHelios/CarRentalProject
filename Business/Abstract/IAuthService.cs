@@ -1,7 +1,6 @@
 ﻿using Core.Entities.Concrete;
 using Core.Entities.DTOs;
 using Core.Utilities.Results;
-using Core.Utilities.Security.Jwt;
 using System;
 using System.Collections.Generic;
 using System.Linq;

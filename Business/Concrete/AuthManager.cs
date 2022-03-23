@@ -17,6 +17,7 @@ namespace Business.Concrete
     {
         private IUserService _userService;
         private ITokenHelper _tokenHelper;
+
         public AuthManager(IUserService userService, ITokenHelper tokenHelper)
         {
             _userService = userService;
@@ -39,6 +40,7 @@ namespace Business.Concrete
 
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
                 return new ErrorDataResult<User>(Messages.PasswordError);
+            }
 
             return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
@@ -53,6 +55,8 @@ namespace Business.Concrete
                 PasswordHash = passwordHash,
                 FirstName = userForRegisterDto.FirstName,
                 LastName = userForRegisterDto.LastName,
+                Email = userForRegisterDto.Email,
+                PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true
             };

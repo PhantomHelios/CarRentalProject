@@ -14,6 +14,7 @@ namespace Core.Utilities.Security.Hashing
             {
                 passwordSalt = hmac.Key;
                 passwordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
             }
         }
 
@@ -27,10 +28,12 @@ namespace Core.Utilities.Security.Hashing
                 {
                     if(computedHash[i] != passwordHash[i])
                         return false;
-                }
+                    }
 
                 return true;
             }
+
+
         }
     }
 }
