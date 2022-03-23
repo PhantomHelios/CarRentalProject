@@ -4,7 +4,7 @@ using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
-using Entities.Concrete;
+using Core.Entities.Concrete;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,29 +25,15 @@ namespace Business.Concrete
         [ValidationAspect(typeof(UserValidator))]
         public IResult Add(User user)
         {
-            try
-            {
-                _userDal.Add(user);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
+            _userDal.Add(user);
 
             return new SuccessResult(Messages.UserAdded);
         }
 
         public IResult Delete(User user)
-        {
-            try
-            {
-                _userDal.Delete(user);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
-
+        {      
+            _userDal.Delete(user);
+            
             return new SuccessResult(Messages.UserDeleted);
         }
 
@@ -63,18 +49,21 @@ namespace Business.Concrete
             return new SuccessDataResult<List<User>>(_userDal.GetAll());
         }
 
+        public User GetByMail(string email)
+        {
+            return _userDal.Get(user => user.Email == email);
+        }
+
+        public List<OperationClaim> GetClaims(User user)
+        {
+            return _userDal.GetClaims(user);
+        }
+
         [ValidationAspect(typeof(UserValidator))]
         public IResult Update(User user)
         {
-            try
-            {
-                _userDal.Update(user);
-            }
-            catch
-            {
-                return new ErrorResult(Messages.MaintenanceTime);
-            }
-
+            _userDal.Update(user);
+            
             return new SuccessResult(Messages.UserUpdated);
         }
     }
