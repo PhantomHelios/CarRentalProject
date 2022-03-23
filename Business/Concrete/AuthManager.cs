@@ -4,7 +4,7 @@ using Core.Entities.Concrete;
 using Core.Entities.DTOs;
 using Core.Utilities.Results;
 using Core.Utilities.Security.Hashing;
-using Core.Utilities.Security.Jwt;
+using Core.Utilities.Security.JWT;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,7 +40,7 @@ namespace Business.Concrete
 
             if (!HashingHelper.VerifyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
                 return new ErrorDataResult<User>(Messages.PasswordError);
-            }
+            
 
             return new SuccessDataResult<User>(userToCheck, Messages.SuccessfulLogin);
         }
@@ -52,10 +52,8 @@ namespace Business.Concrete
             var user = new User
             {
                 Email = userForRegisterDto.Email,
-                PasswordHash = passwordHash,
                 FirstName = userForRegisterDto.FirstName,
                 LastName = userForRegisterDto.LastName,
-                Email = userForRegisterDto.Email,
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 Status = true
