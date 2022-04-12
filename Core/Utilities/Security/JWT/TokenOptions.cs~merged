@@ -1,0 +1,24 @@
+<<<<<<< HEAD
+﻿namespace Core.Utilities.Security.JWT
+=======
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.Utilities.Security.JWT
+>>>>>>> 69de0c609554ea978f9e986968d8918851da6b11
+{
+    public class TokenOptions
+    {
+        public string Audience { get; set; }
+        public string Issuer { get; set; }
+        public int AccessTokenExpiration { get; set; }
+        public string SecurityKey { get; set; }
+    }
+<<<<<<< HEAD
+}
+=======
+}
+>>>>>>> 69de0c609554ea978f9e986968d8918851da6b11
