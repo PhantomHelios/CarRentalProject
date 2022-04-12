@@ -1,5 +1,5 @@
 ﻿using Core.Entities.Concrete;
-using Core.Entities.Dtos;
+using Core.Entities.DTOs;
 using Core.Utilities.Results;
 using Core.Utilities.Security.JWT;
 using System;

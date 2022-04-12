@@ -62,7 +62,6 @@ namespace Business.Concrete
             var carImages = _carImageDal.GetAll(ci => ci.CarId == carId);
 
             if (!carImages.Any())
-                return new SuccessDataResult<List<CarImage>>(GetDefaultImage().Data);
                 return new SuccessDataResult<List<CarImage>>(GetDefaultImage(carId).Data);
 
             return new SuccessDataResult<List<CarImage>>(carImages);
@@ -76,7 +75,6 @@ namespace Business.Concrete
             return new SuccessResult(Messages.CarImageUpdated);
         }
 
-        private IDataResult<List<CarImage>> GetDefaultImage()
         private IDataResult<List<CarImage>> GetDefaultImage(int carId)
         {
             var image = new List<CarImage>(){
@@ -85,7 +83,6 @@ namespace Business.Concrete
                 ImagePath = "wwwroot\\DefaultCarImage.png"
                 } };
 
-            return new SuccessDataResult<List<CarImage>>();
             return new SuccessDataResult<List<CarImage>>(image);
         }
 

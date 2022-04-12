@@ -1,5 +1,5 @@
 ﻿using Business.Abstract;
-using Core.Entities.Dtos;
+using Core.Entities.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
