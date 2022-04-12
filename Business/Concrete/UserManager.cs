@@ -39,27 +39,24 @@ namespace Business.Concrete
             return result != null ? new SuccessDataResult<User>(result) : new ErrorDataResult<User>();
         }
 
-        public IDataResult<List<User>> GetAll()
-        {
-            return new SuccessDataResult<List<User>>(_userDal.GetAll());
-        }
-
-        [ValidationAspect(typeof(UserValidator))]
-        public IResult Update(User user)
-        {
-            _userDal.Update(user);
-            
-            return new SuccessResult(Messages.UserUpdated);
-        }
-
         public List<OperationClaim> GetClaims(User user)
         {
             return _userDal.GetClaims(user);
         }
 
-        public User GetByMail(string email)
+        [ValidationAspect(typeof(UserValidator))]
+        public IResult Update(User user)
         {
-            return _userDal.Get(u => u.Email == email);
+            try
+            {
+                _userDal.Update(user);
+            }
+            catch
+            {
+                return new ErrorResult(Messages.MaintenanceTime);
+            }
+
+            return new SuccessResult(Messages.UserUpdated);
         }
     }
 }

@@ -49,6 +49,8 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
+app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
+
 app.UseHttpsRedirection();
 
 app.UseCors(builder => builder.WithOrigins("http://localhost:3000").AllowAnyHeader());
