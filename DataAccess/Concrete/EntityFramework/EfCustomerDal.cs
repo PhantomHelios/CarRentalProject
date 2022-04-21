@@ -27,10 +27,9 @@ namespace DataAccess.Concrete.EntityFramework
                              on c.UserId equals u.Id
                              select new CustomerDetailDto
                              {
-                                 CustomerEmail = u.Email,
+                                 Email = u.Email,
                                  CompanyName = c.CompanyName,
-                                 CustomerFirstName = u.FirstName,
-                                 CustomerLastName = u.LastName
+                                 Name = $"{u.FirstName} {u.LastName}"
                              };
 
                 return result.ToList();

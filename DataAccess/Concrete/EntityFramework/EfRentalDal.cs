@@ -27,12 +27,11 @@ namespace DataAccess.Concrete.EntityFramework
                              on customer.UserId equals user.Id
                              select new RentalDetailDto
                              {
-                                 CarBrand = brand.Name,
-                                 CarModel = car.Description,
-                                 CustomerFirstName = user.FirstName,
-                                 CustomerLastName = user.LastName,
+                                 BrandName = brand.Name,
+                                 Model = car.Description,
+                                 CustomerName = $"{user.FirstName} {user.LastName}",
                                  RentDate = rental.RentDate,
-                                 Returndate = rental.ReturnDate,
+                                 ReturnDate = rental.ReturnDate,
                              };
 
 

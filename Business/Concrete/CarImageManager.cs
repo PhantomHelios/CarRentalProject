@@ -61,6 +61,9 @@ namespace Business.Concrete
         {
             var carImages = _carImageDal.GetAll(ci => ci.CarId == carId);
 
+            foreach(var carImage in carImages)
+                carImage.ImagePath = "uploads/images/" + carImage.ImagePath;
+
             if (!carImages.Any())
                 return new SuccessDataResult<List<CarImage>>(GetDefaultImage(carId).Data);
 
@@ -80,7 +83,7 @@ namespace Business.Concrete
             var image = new List<CarImage>(){
                 new CarImage{
                 CarId = carId,
-                ImagePath = "wwwroot\\DefaultCarImage.png"
+                ImagePath = "DefaultCarImage.png"
                 } };
 
             return new SuccessDataResult<List<CarImage>>(image);

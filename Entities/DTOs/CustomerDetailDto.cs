@@ -9,9 +9,8 @@ namespace Entities.DTOs
 {
     public class CustomerDetailDto : IDto
     {
-        public string CustomerFirstName { get; set; }
-        public string CustomerLastName { get; set; }
+        public string Name { get; set; }
         public string CompanyName { get; set; }
-        public string CustomerEmail { get; set; }
+        public string Email { get; set; }
     }
 }
